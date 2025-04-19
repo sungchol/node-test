@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    />
+
+    <title>Getting Started</title>
+  </head>
+
+  <body>
+    <div class="container pt-5">
+      <div class="row mt-5">
+        <div class="col-md-6">
+          <div class="form-group">
+            <input
+              type="text"
+              class="form-control"
+              name="total"
+              placeholder="Get change for..."
+            />
+            <button class="btn btn-success btn-block" onClick="getChange()">
+              Get Change
+            </button>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <ul class="noStyle">
+            <li>
+              <h2>$ <span id="total"></span></h2>
+            </li>
+            <li>Silver Dollars: <span id="Silver-Dollars"></span></li>
+            <li>Half Dollars: <span id="Half-Dollars"></span></li>
+            <li>Quarters: <span id="Quarters"></span></li>
+            <li>Dimes: <span id="Dimes"></span></li>
+            <li>Nickels: <span id="Nickels"></span></li>
+            <li>Pennies: <span id="Pennies"></span></li>
+          </ul>
+        </div>
+      </div>
+      <div id="data"></div>
+    </div>
+  </body>
+
+  <script>
+    async function getChange() {
+      if (
+        typeof parseInt(document.querySelector("input[name='total']").value) ===
+        "number"
+      ) {
+        let amount = document.querySelector("input[name='total']").value;
+
+        try {
+          const response = await fetch(
+            "http://localhost:5000/change/" + amount,
+            {
+              method: "POST", // or 'PUT'
+              headers: {
+                "Content-Type": "text/html; charset=utf-8",
+              },
+              body: amount,
+            }
+          );
+
+          const result = await response.json();
+
+          document.getElementById("total").innerHTML = result.total / 100;
+          document.getElementById("Silver-Dollars").innerHTML =
+            result.SilverDollarQuotient;
+          document.getElementById("Half-Dollars").innerHTML =
+            result.halfDollarQuotient;
+          document.getElementById("Quarters").innerHTML =
+            result.quarterQuotient;
+          document.getElementById("Dimes").innerHTML = result.dimeQuotient;
+          document.getElementById("Nickels").innerHTML = result.nickelQuotient;
+          document.getElementById("Pennies").innerHTML = parseInt(
+            result.remainder
+          );
+          document.querySelector("input[name='total']").value = "";
+
+          console.log("Success:", result);
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      } else {
+        console.log("Not a number");
+      }
+    }
+
+    async function getData() {
+      try {
+        const response = await fetch("http://localhost:5000/data", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        const data = await response.json();
+        let tagData = data.map((item) => {
+          return `
+		  	<ul class="border border-primary w-50 list-style-none">
+				<li>${item.id}</li>
+				<li>${item.name}</li>
+				<li>${item.value}</li>
+			</ul>
+		  	`;
+        });
+        document.getElementById("data").innerHTML = tagData.join("");
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    }
+
+    getData();
+  </script>
+  <style>
+    li {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      margin-left: -20px;
+    }
+  </style>
+</html>
