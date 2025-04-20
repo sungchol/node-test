@@ -62,7 +62,7 @@
 
         try {
           const response = await fetch(
-            "https://node-test-o7ci.onrender.com/" + amount,
+            "https://node-test-o7ci.onrender.com/change/" + amount,
             {
               method: "POST", // or 'PUT'
               headers: {
@@ -99,12 +99,15 @@
 
     async function getData() {
       try {
-        const response = await fetch("https://node-test-o7ci.onrender.com/", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          "https://node-test-o7ci.onrender.com/data",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         const data = await response.json();
         let tagData = data.map((item) => {
