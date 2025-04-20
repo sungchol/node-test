@@ -62,7 +62,7 @@
 
         try {
           const response = await fetch(
-            "http://localhost:5000/change/" + amount,
+            "https://node-test-o7ci.onrender.com/" + amount,
             {
               method: "POST", // or 'PUT'
               headers: {
@@ -99,7 +99,7 @@
 
     async function getData() {
       try {
-        const response = await fetch("http://localhost:5000/data", {
+        const response = await fetch("https://node-test-o7ci.onrender.com/", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
